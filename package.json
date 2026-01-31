@@ -1,0 +1,23 @@
+{
+  "name": "oxi-e16-configuration",
+  "version": "1.0.0",
+  "description": "Claude skill for OXI E16 MIDI controller scene configuration",
+  "keywords": [
+    "oxi",
+    "e16",
+    "midi",
+    "controller",
+    "scene",
+    "nrpn",
+    "skills",
+    "claude",
+    "elektron",
+    "digitone"
+  ],
+  "author": "Brent Vatne",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/brentvatne/oxi-e16-configuration"
+  }
+}
