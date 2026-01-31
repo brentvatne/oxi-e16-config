@@ -1,0 +1,245 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oxiinstruments.com/schemas/e16-scene.json",
+  "title": "OXI E16 Scene",
+  "description": "Configuration file for OXI E16 MIDI controller scenes (.oxie16)",
+  "type": "object",
+  "required": ["title", "icon", "selectedPreset", "code", "pages"],
+  "properties": {
+    "title": {
+      "type": "string",
+      "maxLength": 16,
+      "description": "Scene name displayed on the E16"
+    },
+    "icon": {
+      "type": "array",
+      "items": { "type": "integer", "minimum": 0, "maximum": 255 },
+      "minItems": 32,
+      "maxItems": 32,
+      "description": "32-byte icon bitmap"
+    },
+    "selectedPreset": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Currently selected preset index"
+    },
+    "code": {
+      "type": "object",
+      "properties": {
+        "code": { "type": "string" }
+      },
+      "required": ["code"],
+      "description": "Custom code/script (reserved for future use)"
+    },
+    "pages": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/page" },
+      "minItems": 12,
+      "maxItems": 12,
+      "description": "12 pages of encoder mappings"
+    }
+  },
+  "$defs": {
+    "page": {
+      "type": "object",
+      "required": ["title", "output", "channel", "encoders"],
+      "properties": {
+        "title": {
+          "type": "string",
+          "maxLength": 8,
+          "description": "Page name displayed on the E16"
+        },
+        "output": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 14,
+          "description": "Default MIDI output for this page (0=ALL, 1=TRS1, 2=TRS2, 3=USB1, 4=USB2, 5=USB3, 6=BLE, 12=Page, 13=ALL-BLE, 14=ALL-USB)"
+        },
+        "channel": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16,
+          "description": "Default MIDI channel for this page (1-16)"
+        },
+        "encoders": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/encoder" },
+          "minItems": 16,
+          "maxItems": 16,
+          "description": "16 encoder configurations"
+        }
+      }
+    },
+    "encoder": {
+      "type": "object",
+      "required": ["name", "abbr", "color", "push_action", "turn_actions", "bipolar"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "maxLength": 8,
+          "description": "Full encoder name (8 char max)"
+        },
+        "abbr": {
+          "type": "string",
+          "maxLength": 4,
+          "description": "Abbreviated name for grid display (4 char max)"
+        },
+        "color": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 99,
+          "description": "LED ring color (0-99, 10x10 palette: 0-9 blues, 10-19 blue/purple, 20-29 violet, 30-39 purple/brown, 40-49 olive/yellow, 50-59 red/orange, 60-69 red/pink, 70-79 magenta, 80-89 cyan/teal, 90-99 green)"
+        },
+        "bipolar": {
+          "type": "boolean",
+          "description": "Whether the encoder displays as bipolar (center-zero)"
+        },
+        "push_action": {
+          "$ref": "#/$defs/pushAction",
+          "description": "Action when encoder is pressed"
+        },
+        "turn_actions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/turnAction" },
+          "minItems": 2,
+          "maxItems": 2,
+          "description": "Primary and secondary turn actions"
+        }
+      }
+    },
+    "pushAction": {
+      "type": "object",
+      "required": ["instrument", "parameter", "type", "display", "mode", "channel", "lower", "upper", "nr1", "nr2", "output"],
+      "properties": {
+        "instrument": {
+          "type": "integer",
+          "description": "Instrument preset ID (127 = generic/custom)"
+        },
+        "parameter": {
+          "type": "integer",
+          "description": "Parameter index within instrument preset"
+        },
+        "type": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8,
+          "description": "Push action type: 0=Off, 1=Note, 2=CC, 3=PC, 4=SetToDefault, 5=AT, 6=Page, 7=Record, 8=PlayPauseRec"
+        },
+        "display": {
+          "type": "integer",
+          "description": "Display format"
+        },
+        "mode": {
+          "type": "integer",
+          "description": "Behavior mode"
+        },
+        "channel": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 16,
+          "description": "MIDI channel (0 = use page channel, 1-16 = specific channel)"
+        },
+        "lower": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Minimum value"
+        },
+        "upper": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Maximum value"
+        },
+        "nr1": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 127,
+          "description": "Primary number (CC number, NRPN LSB, note number, etc.)"
+        },
+        "nr2": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 127,
+          "description": "Secondary number (NRPN MSB, velocity, etc.)"
+        },
+        "output": {
+          "type": "integer",
+          "description": "MIDI output (12 = use page output)"
+        }
+      }
+    },
+    "turnAction": {
+      "type": "object",
+      "required": ["instrument", "parameter", "type", "display", "mode", "channel", "lower", "upper", "defaultValue", "nr1", "nr2", "output"],
+      "properties": {
+        "instrument": {
+          "type": "integer",
+          "description": "Instrument preset ID (127 = generic/custom)"
+        },
+        "parameter": {
+          "type": "integer",
+          "description": "Parameter index within instrument preset"
+        },
+        "type": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Turn action type: 0=OFF, 1=CC_Rel1, 2=CC_Rel2, 3=CC_Abs, 4=CC14, 5=PC, 6=PB, 7=AT, 8=Note, 9=NRPN, 10=Snapshot"
+        },
+        "display": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 11,
+          "description": "Display format: 0=OFF, 1=127, 2=100, 3=1000, 4=B63, 8=9999, 10=Standard, 11=HighRes"
+        },
+        "mode": {
+          "type": "integer",
+          "minimum": 3,
+          "maximum": 7,
+          "description": "Acceleration mode: 3=Acc0, 4=Acc1, 5=Acc2, 6=Acc3, 7=Acc4"
+        },
+        "channel": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 16,
+          "description": "MIDI channel (0 = use page channel, 1-16 = specific channel)"
+        },
+        "lower": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 16383,
+          "description": "Minimum value (0-127 for 7-bit, 0-16383 for 14-bit)"
+        },
+        "upper": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 16383,
+          "description": "Maximum value (0-127 for 7-bit, 0-16383 for 14-bit)"
+        },
+        "defaultValue": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 16383,
+          "description": "Default/reset value"
+        },
+        "nr1": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 127,
+          "description": "For CC: CC number. For NRPN: LSB (CC#98 value)"
+        },
+        "nr2": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 127,
+          "description": "For CC: unused (0). For NRPN: MSB (CC#99 value)"
+        },
+        "output": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 14,
+          "description": "MIDI output: 0=ALL, 1=TRS1, 2=TRS2, 3=USB1, 4=USB2, 5=USB3, 6=BLE, 12=Page, 13=ALL-BLE, 14=ALL-USB"
+        }
+      }
+    }
+  }
+}

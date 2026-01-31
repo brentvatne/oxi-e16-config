@@ -168,9 +168,36 @@ Same structure as turn_action but different type values:
 4. Set turn_actions[1] type to 0 if unused
 5. Save as `.oxie16` file
 
-## Template
+## References
 
-See `references/scene-template.json` for a minimal starting template.
+- `references/scene-schema.json` — Full JSON Schema for validation
+- `references/scene-template.json` — Minimal starting template
+
+## Abbreviation Best Practices
+
+For 4-character abbreviations on the E16 display:
+
+**Oscillators:** Use `O1`/`O2` prefix (not `1`/`2` or `A`/`B`)
+- `O1Tn`, `O1Wv`, `O1Lv` (Osc1 Tune, Wave, Level)
+- `O2Tn`, `O2Wv`, `O2Lv` (Osc2 Tune, Wave, Level)
+
+**Envelopes:** Use consistent F/A prefix for Filter/Amp
+- `FAtk`, `FDcy`, `FSus`, `FRel` (Filter ADSR)
+- `AAtk`, `AHld`, `ADcy`, `ARel` (Amp AHDR)
+
+**Effects:** Clear prefixes, avoid ambiguity
+- `DTim`, `DFbk`, `DMix` (Delay Time/Feedback/Mix)
+- `RDcy`, `RMix`, `RPDl` (Reverb Decay/Mix/PreDelay)
+- `CDpt`, `CSpd`, `CMix` (Chorus Depth/Speed/Mix)
+- `MOvr` not `MOD` (Master Overdrive — avoids confusion with modulation)
+
+**Sends:** Short and clear
+- `Cho`, `Dly`, `Rev` (Chorus/Delay/Reverb sends)
+
+**Avoid:**
+- Single digit prefixes (`1Tn` → use `O1Tn`)
+- Ambiguous terms (`SAni` → use `SwMd` for Swarm Mode)
+- `MOD` for overdrive (use `MOvr` or `OD`)
 
 ## Example: Elektron Digitone II
 
@@ -179,3 +206,11 @@ For NRPN-based synths like the Digitone II:
 - Set page `channel` to the track's MIDI channel
 - Use `channel: 16` in turn_action for FX parameters (if FX channel = 16)
 - NRPN addresses: `nr1` = LSB, `nr2` = MSB
+
+Sample page layout for Wavetone engine:
+```
+O1Tn  O1Wv  O1Pd  O1Lv
+O2Tn  O2Wv  O2Pd  O2Lv
+O1Ln  O2Ln  OMod  Drft
+NAtk  NDcy  NLvl  NCol
+```
