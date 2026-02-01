@@ -9,7 +9,64 @@ Create and edit `.oxie16` scene files for the OXI E16 MIDI controller.
 
 ## File Format
 
-Scene files are JSON with this structure:
+Scene files are JSON with this structure.
+
+### Title Length Limit
+
+Scene titles truncate to ~7 characters on the E16 display. Use common abbreviations:
+
+| Device | Abbreviation |
+|--------|--------------|
+| Digitone II | DN2 |
+| Digitakt II | DT2 |
+| Syntakt | SYN |
+| Analog Four | A4 |
+| Analog Rytm | AR |
+| Octatrack | OT |
+| Model:Cycles | MC |
+| Model:Samples | MS |
+
+### Icon Format
+
+Icons are 16×16 1-bit bitmaps stored as **exactly 32 bytes** (2 bytes per row):
+- Byte 0 = pixels 0-7, Byte 1 = pixels 8-15
+- Bit 7 = leftmost pixel in each byte (MSB = left)
+- Row 0 at bytes 0-1, Row 1 at bytes 2-3, etc.
+
+**CRITICAL:** Icon must be exactly 32 bytes or the scene will fail to load silently.
+
+#### Designing Icons
+
+To convert ASCII art to bytes:
+```
+Row: ##....## ○○○○....
+     ││    ││ ││││
+     Byte 0   Byte 1
+
+##....## = 11000011 = 195
+○○○○.... = 11110000 = 240
+→ [195, 240]
+```
+
+#### Icon Ideas
+
+| Style | Description |
+|-------|-------------|
+| Device face | Mini representation of the synth (screen, knobs, buttons) |
+| Waveform | Sine wave, FM modulation, or other synthesis waveform |
+| Text | Device abbreviation like "DN" + "II" (limited space) |
+| Track grid | 8 squares representing tracks/pads |
+| Knob | Single large encoder/knob icon |
+
+#### Example: Sine Wave
+```
+[0,0,8,0,20,0,34,0,0,0,65,0,0,0,128,128,0,0,0,65,0,0,0,34,0,20,0,8,0,0,0,0]
+```
+
+#### Example: Device Face (Digitone II style)
+```
+[255,255,192,3,222,171,222,3,222,171,192,3,255,255,192,3,219,219,219,219,192,3,219,219,219,219,192,3,255,255,0,0]
+```
 
 ```json
 {
@@ -42,11 +99,13 @@ Scene files are JSON with this structure:
   "name": "Display Name (8 char max)",
   "abbr": "Abbr (4 char)",
   "color": 0,
-  "bipolar": false,
   "push_action": {...},
-  "turn_actions": [{primary}, {secondary}]
+  "turn_actions": [{primary}, {secondary}],
+  "bipolar": false
 }
 ```
+
+**CRITICAL:** Field order matters! The `bipolar` field must come AFTER `turn_actions`, not before.
 
 #### Color Values
 
@@ -56,6 +115,8 @@ Scene files are JSON with this structure:
 - 60-69: Reds/Pink, 70-79: Magentas, 80-89: Cyans/Teal, 90-99: Greens
 
 ### Turn Action (MIDI Mapping)
+
+**CRITICAL:** All action objects (push_action, turn_actions[0], turn_actions[1]) must include ALL fields. Do NOT use shorthand like `{"type": 0}` — the app will fail to load the scene silently.
 
 ```json
 {
@@ -70,6 +131,24 @@ Scene files are JSON with this structure:
   "defaultValue": 0,
   "nr1": 73,
   "nr2": 1,
+  "output": 12
+}
+```
+
+**Disabled action template** (use this instead of `{"type": 0}`):
+```json
+{
+  "instrument": 127,
+  "parameter": 0,
+  "type": 0,
+  "display": 0,
+  "mode": 0,
+  "channel": 0,
+  "lower": 0,
+  "upper": 127,
+  "defaultValue": 0,
+  "nr1": 0,
+  "nr2": 0,
   "output": 12
 }
 ```
@@ -146,7 +225,24 @@ Example: NRPN MSB 1, LSB 73 → `nr1: 73, nr2: 1`
 
 ### Push Action (Encoder Press)
 
-Same structure as turn_action but different type values:
+Same structure as turn_action but different type values. Note: push_action does NOT have `defaultValue` field.
+
+**Disabled push_action template:**
+```json
+{
+  "instrument": 127,
+  "parameter": 0,
+  "type": 0,
+  "display": 0,
+  "mode": 0,
+  "channel": 0,
+  "lower": 0,
+  "upper": 127,
+  "nr1": 0,
+  "nr2": 0,
+  "output": 12
+}
+```
 
 | Type | Push Action |
 |------|-------------|
@@ -165,11 +261,44 @@ Same structure as turn_action but different type values:
 1. Start with the base structure (12 pages, 16 encoders each)
 2. Set page titles and channels
 3. Configure each encoder's turn_actions[0] for primary mapping
-4. Set turn_actions[1] type to 0 if unused
-5. Save as `.oxie16` file
+4. For unused actions, use the full disabled action template (type: 0 with all fields)
+5. Ensure field order in encoders: name, abbr, color, push_action, turn_actions, bipolar
+6. Save as minified single-line JSON with `.oxie16` extension
+
+**Common mistakes that cause silent load failures:**
+- Using shorthand `{"type": 0}` instead of full action objects
+- Wrong field order in encoder objects
+- Missing required fields in any action object
+
+## Scene Generator
+
+Use `generate-scene.js` to create valid `.oxie16` files from compact input:
+
+```bash
+node generate-scene.js input.json output.oxie16
+```
+
+### Compact Input Format
+
+Encoders use array format: `[abbr, name, msb, lsb, channel?]`
+
+```json
+{"title":"My Synth","pages":[
+  {"title":"Osc","channel":1,"encoders":[
+    ["O1Tn","Osc1 Tune",1,73],
+    ["O1Wv","Osc1 Wave",1,74],
+    ["FFreq","Filter",1,20,16]
+  ]}
+]}
+```
+
+- `channel` in array overrides page channel (use for FX params on ch16)
+- Empty encoders auto-padded to 16 per page, 12 pages total
+- All action objects fully populated with correct field order
 
 ## References
 
+- `generate-scene.js` — Scene generator (compact JSON → .oxie16)
 - `references/scene-schema.json` — Full JSON Schema for validation
 - `references/scene-template.json` — Minimal starting template
 
@@ -177,9 +306,9 @@ Same structure as turn_action but different type values:
 
 For 4-character abbreviations on the E16 display:
 
-**Oscillators:** Use `O1`/`O2` prefix (not `1`/`2` or `A`/`B`)
-- `O1Tn`, `O1Wv`, `O1Lv` (Osc1 Tune, Wave, Level)
-- `O2Tn`, `O2Wv`, `O2Lv` (Osc2 Tune, Wave, Level)
+**Oscillators:** Use `1`/`2` prefix to save space
+- `1Tn`, `1Wv`, `1Lv` (Osc1 Tune, Wave, Level)
+- `2Tn`, `2Wv`, `2Lv` (Osc2 Tune, Wave, Level)
 
 **Envelopes:** Use consistent F/A prefix for Filter/Amp
 - `FAtk`, `FDcy`, `FSus`, `FRel` (Filter ADSR)
@@ -195,7 +324,6 @@ For 4-character abbreviations on the E16 display:
 - `Cho`, `Dly`, `Rev` (Chorus/Delay/Reverb sends)
 
 **Avoid:**
-- Single digit prefixes (`1Tn` → use `O1Tn`)
 - Ambiguous terms (`SAni` → use `SwMd` for Swarm Mode)
 - `MOD` for overdrive (use `MOvr` or `OD`)
 
@@ -209,8 +337,8 @@ For NRPN-based synths like the Digitone II:
 
 Sample page layout for Wavetone engine:
 ```
-O1Tn  O1Wv  O1Pd  O1Lv
-O2Tn  O2Wv  O2Pd  O2Lv
-O1Ln  O2Ln  OMod  Drft
+1Tn   1Wv   1Pd   1Lv
+2Tn   2Wv   2Pd   2Lv
+1Ln   2Ln   OMod  Drft
 NAtk  NDcy  NLvl  NCol
 ```

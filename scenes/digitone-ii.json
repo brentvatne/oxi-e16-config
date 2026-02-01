@@ -1,0 +1,43 @@
+{"title":"DN2","icon":[0,0,8,0,20,0,34,0,0,0,65,0,0,0,128,128,0,0,0,65,0,0,0,34,0,20,0,8,0,0,0,0],"pages":[
+{"title":"Wavetone","channel":1,"encoders":[
+["1Tn","Osc1 Tune",1,73],["1Wv","Osc1 Wave",1,74],["1Pd","Osc1 Pdst",1,75],["1Lv","Osc1 Lvl",1,76],
+["2Tn","Osc2 Tune",1,77],["2Wv","Osc2 Wave",1,78],["2Pd","Osc2 Pdst",1,79],["2Lv","Osc2 Lvl",1,80],
+["1Ln","Osc1 Lin",1,81],["2Ln","Osc2 Lin",1,85],["OMod","Osc Mod",1,83],["Drft","Osc Drft",1,88],
+["NAtk","Noise Atk",1,89],["NDcy","Noise Dcy",1,91],["NLvl","Noise Lvl",1,92],["NCol","Noise Chr",1,96]]},
+{"title":"Swarmer","channel":1,"encoders":[
+["Tune","Tune",1,73],["SwWv","Swrm Wave",1,74],["SwDt","Swrm Detn",1,75],["SwMx","Swrm Mix",1,76],
+["MOct","Main Oct",1,77],["MWav","Main Wave",1,78],["SwAn","Swrm Anim",1,79],["NMod","Noise Mod",1,80],
+["FFrq","Filt Freq",1,20],["FRes","Filt Res",1,21],["FEnv","Filt Env",1,26],["Vol","Volume",1,39],
+["Cho","Chor Send",1,35],["Dly","Dly Send",1,36],["Rev","Rev Send",1,37],["TLvl","Trk Level",1,110]]},
+{"title":"FM Tone","channel":1,"encoders":[
+["Algo","Algorith",1,73],["RatC","Ratio C",1,74],["RatA","Ratio A",1,75],["RatB","Ratio B",1,76],
+["Harm","Harmonic",1,77],["Detn","Detune",1,78],["Fdbk","Feedback",1,79],["Mix","Mix",1,80],
+["AAtk","A Env Atk",1,81],["ADcy","A Env Dcy",1,82],["AEnd","A Env End",1,83],["ALvl","A Level",1,84],
+["BAtk","B Env Atk",1,85],["BDcy","B Env Dcy",1,86],["BEnd","B Env End",1,87],["BLvl","B Level",1,88]]},
+{"title":"FM Drum","channel":1,"encoders":[
+["Tune","Tune",1,73],["SwTm","Swp Time",1,74],["SwDp","Swp Dept",1,75],["Algo","Algorith",1,76],
+["CWav","Op C Wave",1,77],["ABWv","OpAB Wav",1,78],["Fdbk","Feedback",1,79],["Fold","Wavefold",1,80],
+["BHld","Body Hld",1,89],["BDcy","Body Dcy",1,90],["BLvl","Body Lvl",1,92],["Trns","Transnt",1,99],
+["TrLv","Trans Lv",1,100],["NDcy","Nois Dcy",1,98],["NWid","Nois Wid",1,102],["NLvl","Nois Lvl",1,104]]},
+{"title":"Filter+Amp","channel":1,"encoders":[
+["FFrq","Flt Freq",1,20],["FRes","Flt Res",1,21],["FTyp","Flt Type",1,22],["FEnv","Flt Env",1,26],
+["FAtk","Flt Atk",1,16],["FDcy","Flt Dcy",1,17],["FSus","Flt Sus",1,18],["FRel","Flt Rel",1,19],
+["AAtk","Amp Atk",1,30],["AHld","Amp Hold",1,31],["ADcy","Amp Dcy",1,32],["ARel","Amp Rel",1,34],
+["Pan","Pan",1,38],["Vol","Volume",1,39],["OD","Ovrdriv",1,8],["TLvl","Trk Levl",1,110]]},
+{"title":"FX+Sends","channel":1,"encoders":[
+["Cho","Chor Snd",1,35],["Dly","Dly Send",1,36],["Rev","Rev Send",1,37],["BRdx","BitRedux",1,5],["SRR","SRR",1,6],
+["DTim","Dly Time",2,20,16],["DFbk","Dly Fdbk",2,23,16],["DMix","Dly Mix",2,27,16],
+["RPDl","Rev PDly",2,28,16],["RDcy","Rev Decy",2,29,16],["RMix","Rev Mix",2,15,16],
+["CDpt","Chr Dept",2,41,16],["CSpd","Chr Sped",2,42,16],["CMix","Chr Mix",2,47,16],
+["MOvr","Mstr OD",2,50,16],["PVol","Ptrn Vol",2,24,16]]},
+{"title":"LFO","channel":1,"encoders":[
+["L1Sp","LF1 Sped",1,42],["L1Mu","LF1 Mult",1,43],["L1Fd","LF1 Fade",1,44],["L1Ds","LF1 Dest",1,45],
+["L1Wv","LF1 Wave",1,46],["L1Ph","LF1 Phas",1,47],["L1Tr","LF1 Trig",1,48],["L1Dp","LF1 Dpth",1,49],
+["L2Sp","LF2 Sped",1,50],["L2Mu","LF2 Mult",1,51],["L2Fd","LF2 Fade",1,52],["L2Ds","LF2 Dest",1,53],
+["L2Wv","LF2 Wave",1,54],["L2Ph","LF2 Phas",1,55],["L2Tr","LF2 Trig",1,56],["L2Dp","LF2 Dpth",1,57]]},
+{"title":"Compress","channel":16,"encoders":[
+["CThr","Cmp Thrs",2,16],["CAtk","Cmp Atk",2,17],["CRel","Cmp Rel",2,18],["CRat","Cmp Rat",2,20],
+["CMkp","Cmp Mkup",2,19],["CSSr","Cmp SCSr",2,21],["CSFl","Cmp SCFl",2,22],["CMix","Cmp Mix",2,23],
+["ELLv","ExtL Lvl",2,30],["ELPn","ExtL Pan",2,32],["ERLv","ExtR Lvl",2,31],["ERPn","ExtR Pan",2,33],
+["ECho","Ext Chor",2,34],["EDly","Ext Dly",2,36],["ERev","Ext Rev",2,38],["PVol","Ptrn Vol",2,24]]}
+]}
