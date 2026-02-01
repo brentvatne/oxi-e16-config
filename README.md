@@ -60,7 +60,7 @@ node generate-scene.js tmp/my-synth.json scenes/my-synth.oxie16
 - Digitakt II
 - Digitone II
 - OP-XY
-- Torso S4
+- Torso S-4
 - Typhon
 
 ## Claude Skill
