@@ -20,7 +20,9 @@ Tools and templates for creating `.oxie16` scene files for the [OXI E16](https:/
 
 ## Scene Generator
 
-`generate-scene.js` converts simplified JSON scene definitions into valid `.oxie16` files that can be loaded onto the OXI E16. It handles:
+`generate-scene.js` converts simplified JSON scene definitions into valid `.oxie16` files that can be loaded onto the OXI E16. When using the Claude skill, this is run automatically after creating or editing a scene.
+
+It handles:
 
 - Expanding encoder definitions with proper MIDI message formatting
 - Auto-assigning LED colors based on parameter type (filter, envelope, LFO, etc.)
@@ -74,6 +76,10 @@ node generate-scene.js tmp/my-synth.json scenes/my-synth.oxie16
 - OP-XY
 - Torso S-4
 - Typhon
+
+You can export any other instrument definition from the [OXI App](https://oxiinstruments.com/support/) by clicking the menu on an instrument and selecting "Export":
+
+![Export instrument from OXI App](docs/oxi-app-export-instrument.png)
 
 ## Claude Skill
 
