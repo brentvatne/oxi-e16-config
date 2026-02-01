@@ -2,6 +2,10 @@
 
 Tools and templates for creating `.oxie16` scene files for the [OXI E16](https://oxiinstruments.com/e16/) MIDI controller.
 
+## Requirements
+
+- [Node.js](https://nodejs.org/) (LTS recommended)
+
 ## Directory Structure
 
 ```
@@ -14,9 +18,17 @@ Tools and templates for creating `.oxie16` scene files for the [OXI E16](https:/
 └── SKILL.md         # Claude skill documentation
 ```
 
-## Usage
+## Scene Generator
 
-### Generate a scene
+`generate-scene.js` converts simplified JSON scene definitions into valid `.oxie16` files that can be loaded onto the OXI E16. It handles:
+
+- Expanding encoder definitions with proper MIDI message formatting
+- Auto-assigning LED colors based on parameter type (filter, envelope, LFO, etc.)
+- Looking up default values from instrument definitions (`.oxiindef` files)
+- Setting "push to reset" behavior on all mapped encoders
+- Filling in disabled encoders and empty pages to meet the E16 format requirements
+
+### Usage
 
 ```bash
 node generate-scene.js tmp/my-synth.json scenes/my-synth.oxie16
