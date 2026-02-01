@@ -18,11 +18,11 @@ const path = require('path');
 function loadInstrumentDef(filePath, basePath = '.') {
   if (!filePath) return null;
 
-  // Try multiple locations: basePath first, then current directory, then scenes/
+  // Try multiple locations: basePath first, then instruments/, then current directory
   const searchPaths = [
     path.resolve(basePath, filePath),
-    path.resolve('.', filePath),
-    path.resolve('./scenes', filePath)
+    path.resolve('./instruments', filePath),
+    path.resolve('.', filePath)
   ];
 
   let fullPath = null;

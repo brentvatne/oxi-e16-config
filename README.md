@@ -1,37 +1,75 @@
 # OXI E16 Configuration
 
-A Claude skill for creating and editing `.oxie16` scene files for the [OXI E16](https://oxiinstruments.com/e16/) MIDI controller.
+Tools and templates for creating `.oxie16` scene files for the [OXI E16](https://oxiinstruments.com/e16/) MIDI controller.
 
-## What it does
+## Directory Structure
 
-This skill teaches Claude how to work with OXI E16 scene files, enabling you to:
-
-- Create new scenes from scratch with custom encoder mappings
-- Edit existing `.oxie16` files
-- Configure MIDI CC, NRPN, and 14-bit parameter mappings
-- Set up pages and encoders for specific synthesizers
-
-The skill includes detailed documentation about the `.oxie16` file format, including encoder types, color palettes, NRPN addressing, and output routing.
-
-## Installation
-
-```bash
-npx skills add brentvatne/oxi-e16-config -g
+```
+├── instruments/     # .oxiindef instrument definitions
+├── scenes/          # .oxie16 compiled scene files
+├── tmp/             # .json source files (gitignored)
+├── icons/           # PNG icon source images
+├── references/      # schema and template files
+├── generate-scene.js
+└── SKILL.md         # Claude skill documentation
 ```
 
 ## Usage
 
-Once installed, Claude will automatically use this skill when you ask it to create or edit OXI E16 scenes. For example:
+### Generate a scene
 
-- "Create an OXI E16 scene for my Digitone II"
-- "Add a page for filter controls with NRPN mappings"
-- "Change encoder 3 to control CC 74 on channel 2"
+```bash
+node generate-scene.js tmp/my-synth.json scenes/my-synth.oxie16
+```
 
-## What's included
+### JSON source format
 
-- `skills/oxi-e16/SKILL.md` - Complete documentation of the `.oxie16` file format
-- `skills/oxi-e16/references/scene-template.json` - Minimal starting template
-- `skills/oxi-e16/references/scene-schema.json` - JSON schema for validation
+```json
+{
+  "title": "MySynth",
+  "instrument": "MySynth.oxiindef",
+  "icon": [0,0,8,0,20,0,34,0,0,0,65,0,0,0,128,128,0,0,0,65,0,0,0,34,0,20,0,8,0,0,0,0],
+  "pages": [
+    {
+      "title": "Filter",
+      "channel": 10,
+      "type": "cc",
+      "encoders": [
+        {"abbr": "FREQ", "name": "Flt Freq", "cc": 16},
+        {"abbr": "RESO", "name": "Flt Res", "cc": 17},
+        {"abbr": "ENV", "name": "Flt Env", "cc": 24, "default": 64}
+      ]
+    }
+  ]
+}
+```
+
+### Encoder options
+
+- `abbr` - 4-char abbreviation shown on E16 display
+- `name` - Full parameter name
+- `cc` - CC number (for CC type)
+- `msb`, `lsb` - NRPN address (for NRPN type)
+- `channel` - MIDI channel override (1-16)
+- `default` - Reset value when encoder pushed
+- `lower`, `upper` - Value range limits
+- `color` - LED color (0-99), auto-assigned if omitted
+
+## Included Instruments
+
+- Digitakt II
+- Digitone II
+- OP-XY
+- Torso S-4
+- Typhon
+
+## Claude Skill
+
+This repo includes a Claude skill (`SKILL.md`) that teaches Claude how to create and edit OXI E16 scenes. Install with:
+
+```bash
+npx skills add brentvatne/oxi-e16-configuration -g
+```
 
 ## License
 
