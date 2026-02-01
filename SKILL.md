@@ -461,13 +461,14 @@ The `default` field sets the value sent when the encoder is pressed (via "Set to
 
 **Discrete parameters**: Usually no default needed (or `"default": 0`)
 
-**Finding default values:** Check the instrument's .oxiindef file if available. Otherwise, look at the device itself - most synths show parameter values on screen when you initialize a patch or reset a parameter.
+**Finding default values:** Check the instrument's .oxiindef file and companion .mdx file if available. The .mdx file contains additional default values, discrete ranges, and notes not captured in the .oxiindef. Otherwise, look at the device itself - most synths show parameter values on screen when you initialize a patch or reset a parameter.
 
 **IMPORTANT: Verify bipolar parameters before setting defaults.** Not all parameters with "center" behavior are bipolar. Before assuming a parameter should default to 64:
 
-1. **Check the .oxiindef file** - look for `default_value` field
-2. **Search the web** for the device's MIDI implementation or manual
-3. **Ask the user** if you're uncertain - they can check their device directly
+1. **Check the .mdx file** - contains documented defaults and discrete ranges
+2. **Check the .oxiindef file** - look for `default_value` field
+3. **Search the web** for the device's MIDI implementation or manual
+4. **Ask the user** if you're uncertain - they can check their device directly
 
 Common mistakes to avoid:
 - Assuming all "offset" or "detune" parameters are bipolar (some start at 0)
@@ -504,12 +505,12 @@ For parameters with discrete values (not continuous 0-127), set the `upper` fiel
 | Routing toggles | 2 (on/off) | 1 |
 | PingPong | 2 (on/off) | 1 |
 
-**Finding discrete ranges:** Check the .oxiindef file's `maximum` field for each parameter. If not available, refer to the device's MIDI implementation chart or count the options in the device's menu.
+**Finding discrete ranges:** First check the instrument's .mdx file for documented discrete values. Then check the .oxiindef file's `maximum` field for each parameter. If not available, refer to the device's MIDI implementation chart or count the options in the device's menu.
 
 **Why this matters:** Without proper `upper` limits, turning the encoder past the last valid value has no effect - the parameter stays at its maximum. Setting `upper` correctly makes the encoder feel responsive across its full range
 
 **Scene fields:**
-- `instrument` - Path to `.oxiindef` file for parameter reference (used for verifying CCs, finding discrete value ranges, and default value lookup)
+- `instrument` - Path to `.oxiindef` file for parameter reference (used for verifying CCs, finding discrete value ranges, and default value lookup). Also check the companion `.mdx` file with the same name for additional documentation on defaults and discrete values
 
 **Page fields:**
 - `type` - `"cc"` or `"nrpn"` (default: cc)

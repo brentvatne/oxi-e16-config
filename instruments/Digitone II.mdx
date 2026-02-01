@@ -1,0 +1,74 @@
+# Digitone II
+
+Additional parameter information not captured in the .oxiindef file.
+
+## Discrete Values
+
+| Parameter | Range | Values |
+|-----------|-------|--------|
+| Osc1 Wave (CC 41) | 0-1 | Sine, Triangle |
+| Osc2 Wave (CC 45) | 0-1 | Sine, Triangle |
+| Osc Mod (CC 50) | 0-3 | FM, AM, Ring, Off |
+| Algorithm (CC 40, FM Tone) | 0-7 | 8 algorithms |
+| Algorithm (CC 43, FM Drum) | 0-6 | 7 algorithms |
+| Filter Type (CC 18) | 0-2 | LP, HP, BP |
+| LFO Multiplier (CC 103/112) | 0-23 | Various time divisions |
+| LFO Waveform (CC 106/115) | 0-6 | Tri, Sine, Sqr, Saw, Exp, Ramp, Random |
+| LFO Trig Mode (CC 108/117) | 0-4 | Free, Trig, Hold, One, Half |
+| Main Octave (CC 44, Swarmer) | 0-127 | 127=0, 65-126=-1, 0-64=-2 |
+
+## Default Values
+
+### Wavetone
+- Osc1/2 Tune: 64 (center)
+- Osc1/2 Phase Distortion: 64 (center)
+- Osc1/2 Level: 100
+- Osc1/2 Linearity: 64 (center)
+- Osc Drift: 64 (center)
+- Noise Level: 100
+
+### Swarmer
+- Tune: 64 (center)
+- Swarm Wave: 80 (range 0-120)
+- Swarm Detune: 70
+- Swarm Mix: 127 (full)
+- Main Octave: 127 (0 octaves)
+- Main Wave: 80 (range 0-120)
+- Swarm Animation: 15
+- Noise Modulator: 20
+- Filter Envelope: 64 (center)
+- Volume: 100
+- Track Level: 100
+
+### FM Tone
+- Harmonic: 64 (center)
+- Detune: 64 (center)
+- Mix: 64 (center)
+- A Level: 100
+- B Level: 100
+
+### FM Drum
+- Tune: 64 (center)
+- Body Level: 100
+- Transient Level: 100
+- Noise Level: 100
+
+### Filter+Amp
+- Filter Envelope: 64 (center)
+- Pan: 64 (center)
+- Volume: 100
+- Track Level: 100
+
+### FX+Sends
+- Reverb Pre-Delay: 16
+- Reverb Decay: 32
+- Pattern Volume: 100
+
+### LFO
+- LFO Fade: 64 (center)
+- LFO Depth: 64 (center)
+
+### Compressor
+- Ext L/R Level: 100
+- Ext L/R Pan: 64 (center)
+- Pattern Volume: 100
