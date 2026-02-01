@@ -26,6 +26,20 @@ Scene titles truncate to ~7 characters on the E16 display. Use common abbreviati
 | Model:Cycles | MC |
 | Model:Samples | MS |
 
+### Elektron MIDI Channels
+
+Elektron devices have special MIDI channels (configurable in device settings):
+
+| Channel | Default | Purpose |
+|---------|---------|---------|
+| Auto Channel | 10 | Controls the currently selected/active track |
+| FX Control | 9 | Controls global FX parameters (Delay, Reverb, Chorus) |
+| Tracks 1-8 | 1-8 | Individual track control |
+
+**Auto Channel** is useful for E16 scenes - instead of hardcoding track 1, use the auto channel so the controller follows your track selection on the device.
+
+**FX Control Channel** controls the master FX block (delay/reverb parameters, not per-track sends). Per-track sends use the track's channel.
+
 ### Icon Format
 
 Icons are 16×16 1-bit bitmaps stored as **exactly 32 bytes** (2 bytes per row):
@@ -285,9 +299,9 @@ Encoders use array format: `[abbr, name, msb, lsb, channel?]`
 ```json
 {"title":"My Synth","pages":[
   {"title":"Osc","channel":1,"encoders":[
-    ["O1Tn","Osc1 Tune",1,73],
-    ["O1Wv","Osc1 Wave",1,74],
-    ["FFreq","Filter",1,20,16]
+    ["TUN1","Osc1 Tune",1,73],
+    ["WAV1","Osc1 Wave",1,74],
+    ["FREQ","Filter",1,20,16]
   ]}
 ]}
 ```
@@ -302,30 +316,82 @@ Encoders use array format: `[abbr, name, msb, lsb, channel?]`
 - `references/scene-schema.json` — Full JSON Schema for validation
 - `references/scene-template.json` — Minimal starting template
 
-## Abbreviation Best Practices
+## Elektron Abbreviation Conventions
 
-For 4-character abbreviations on the E16 display:
+Elektron devices use **UPPERCASE** 4-character abbreviations. Follow these conventions for consistency:
 
-**Oscillators:** Use `1`/`2` prefix to save space
-- `1Tn`, `1Wv`, `1Lv` (Osc1 Tune, Wave, Level)
-- `2Tn`, `2Wv`, `2Lv` (Osc2 Tune, Wave, Level)
+### Standard Parameters
 
-**Envelopes:** Use consistent F/A prefix for Filter/Amp
-- `FAtk`, `FDcy`, `FSus`, `FRel` (Filter ADSR)
-- `AAtk`, `AHld`, `ADcy`, `ARel` (Amp AHDR)
+| Parameter | Abbreviation |
+|-----------|--------------|
+| Tune | TUNE |
+| Wave | WAV (or WAV1/WAV2) |
+| Level | LEV (or LEV1/LEV2) |
+| Frequency | FREQ |
+| Resonance | RESO |
+| Type | TYPE |
+| Pan | PAN |
+| Volume | VOL |
+| Mix | MIX |
 
-**Effects:** Clear prefixes, avoid ambiguity
-- `DTim`, `DFbk`, `DMix` (Delay Time/Feedback/Mix)
-- `RDcy`, `RMix`, `RPDl` (Reverb Decay/Mix/PreDelay)
-- `CDpt`, `CSpd`, `CMix` (Chorus Depth/Speed/Mix)
-- `MOvr` not `MOD` (Master Overdrive — avoids confusion with modulation)
+### Envelopes (ADSR/AHDR)
 
-**Sends:** Short and clear
-- `Cho`, `Dly`, `Rev` (Chorus/Delay/Reverb sends)
+| Parameter | Filter | Amp |
+|-----------|--------|-----|
+| Attack | FATK | AATK |
+| Decay | FDEC | ADEC |
+| Sustain | FSUS | — |
+| Hold | — | AHLD |
+| Release | FREL | AREL |
+| Env Depth | FENV | — |
 
-**Avoid:**
-- Ambiguous terms (`SAni` → use `SwMd` for Swarm Mode)
-- `MOD` for overdrive (use `MOvr` or `OD`)
+### Effects
+
+| Effect | Send | Time | Feedback | Mix | Other |
+|--------|------|------|----------|-----|-------|
+| Delay | DEL | DELT | DELF | DELM | — |
+| Reverb | REV | — | — | REVM | REVP (PreDly), REVD (Decay) |
+| Chorus | CHR | — | — | CHRM | CHRD (Depth), CHRS (Speed) |
+| Overdrive | OVER | — | — | — | — |
+| Bit Reduce | BR | — | — | — | — |
+| Sample Rate | SRR | — | — | — | — |
+
+### Numbered Parameters
+
+Put numbers at the **end**, not the start:
+- `TUN1`, `TUN2` (not `1TUN`)
+- `WAV1`, `WAV2`
+- `LEV1`, `LEV2`
+- `LIN1`, `LIN2`
+- `OFS1`, `OFS2` (offset)
+- `TBL1`, `TBL2` (wavetable)
+
+### LFO Parameters
+
+| LFO 1 | LFO 2 | Parameter |
+|-------|-------|-----------|
+| SPD1 | SPD2 | Speed |
+| MUL1 | MUL2 | Multiplier |
+| FAD1 | FAD2 | Fade |
+| DST1 | DST2 | Destination |
+| WAV1 | WAV2 | Waveform |
+| PHS1 | PHS2 | Phase |
+| TRG1 | TRG2 | Trigger |
+| DPT1 | DPT2 | Depth |
+
+### Other Common
+
+| Parameter | Abbreviation |
+|-----------|--------------|
+| Algorithm | ALGO |
+| Harmonic | HARM |
+| Detune | DETN |
+| Feedback | FDBK |
+| Drift | DRIF |
+| Mode | MODE |
+| Reset | RSET |
+| Track Level | TLEV |
+| Pattern Volume | PVOL |
 
 ## Example: Elektron Digitone II
 
@@ -337,8 +403,8 @@ For NRPN-based synths like the Digitone II:
 
 Sample page layout for Wavetone engine:
 ```
-1Tn   1Wv   1Pd   1Lv
-2Tn   2Wv   2Pd   2Lv
-1Ln   2Ln   OMod  Drft
-NAtk  NDcy  NLvl  NCol
+TUN1  WAV1  PD1   LEV1
+TUN2  WAV2  PD2   LEV2
+LIN1  LIN2  OMOD  DRIF
+NATK  NDEC  NLEV  NCHR
 ```
