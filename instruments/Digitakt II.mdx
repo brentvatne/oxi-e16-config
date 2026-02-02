@@ -2,66 +2,96 @@
 
 Additional parameter information not captured in the .oxiindef file.
 
+Source: https://github.com/pencilresearch/midi/blob/main/Elektron/Digitakt%20II.csv
+
 ## Discrete Values
 
-| Parameter | Range | Values |
-|-----------|-------|--------|
-| Play Mode (CC 17) | 0-3 | Forward, Reverse, PingPong, Slice |
-| Amp Mode (CC 87) | 0-1 | AHD, AHDR |
-| Amp Env Reset (CC 88) | 0-1 | Off, On |
-| Filter Env Reset (CC 111) | 0-1 | Off, On |
-| Overdrive Route (CC 25) | 0-1 | Pre, Post |
-| SRR Route (CC 56) | 0-1 | Pre, Post |
-| Ping Pong (CC 22) | 0-1 | Off, On |
-| LFO Multiplier (CC 103/113/52) | 0-23 | Various time divisions |
-| LFO Waveform (CC 106/116/29) | 0-6 | Tri, Sine, Sqr, Saw, Exp, Ramp, Random |
-| LFO Trig Mode (CC 108/118/31) | 0-4 | Free, Trig, Hold, One, Half |
+| Parameter | CC | Range | Values |
+|-----------|-----|-------|--------|
+| Play Mode | 17 | 0-3 | Reverse, Rev Loop, Fwd Loop, Forward |
+| Oneshot Length | 21 | 0-120 | — |
+| Oneshot Loop Pos | 22 | 0-120 | 0=Off |
+| Amp Mode | 87 | 0-1 | AHD, AHDR |
+| Amp Env Reset | 88 | 0-1 | Off, On |
+| Filter Env Reset | 111 | 0-1 | Off, On |
+| Overdrive Route | 25 | 0-1 | Pre, Post |
+| SRR Route | 56 | 0-1 | Pre, Post |
+| Ping Pong | 22 | 0-1 | Off, On |
+| LFO Multiplier | 103/113/52 | 0-23 | 24 time divisions |
+| LFO Waveform | 106/116/29 | 0-6 | Tri, Sine, Sqr, Saw, Exp, Ramp, Random |
+| LFO Trig Mode | 108/118/31 | 0-4 | Free, Trig, Hold, One, Half |
+| Pattern Mute | 110 | 0-1 | Unmuted, Muted |
 
 ## Default Values
 
-### Sample
-- Tune: 64 (center)
+Note: Elektron uses 63 as center value (not 64). Volume defaults to 110 (not 100).
+
+### Sample/Source
+- Tune: 63 (bipolar)
+- Play Mode: 3 (Forward, range 0-3)
 - Sample Level: 100
-- Filter Envelope: 64 (center)
-- Volume: 100
-- Pan: 64 (center)
+- Oneshot Length: 120 (range 0-120)
+- Oneshot Loop Pos: 120 (range 0-120)
 
 ### Filter
-- Filter Envelope: 64 (center)
-- Key Track: 64 (center)
-- Volume: 100
-- Pan: 64 (center)
+- Frequency: 127
+- Resonance: 0
+- Width: 127
+- Attack: 0
+- Decay: 64
+- Sustain: 0
+- Release: 64
+- Envelope Depth: 63 (bipolar)
+- Env Reset: 1 (On, range 0-1)
+- Key Track: 0 (range 0-100, NOT bipolar)
 
 ### Amp
-- Volume: 100
-- Pan: 64 (center)
+- Attack: 0
+- Hold: 127 (127=Note length)
+- Decay: 64 (127=Infinite)
+- Sustain: 127
+- Release: 32 (127=Infinite)
+- Mode: 0 (AHD, range 0-1)
+- Env Reset: 1 (On, range 0-1)
+- Volume: 110
+- Pan: 63 (bipolar)
 
-### LFO
-- LFO Fade: 64 (center)
-- LFO Depth: 64 (center)
-- Volume: 100
-- Pan: 64 (center)
+### LFO (1/2/3)
+- Speed: varies (bipolar)
+- Multiplier: 1 (range 0-23)
+- Fade: 63 (bipolar)
+- Waveform: 1 (Sine, range 0-6)
+- Trig Mode: 0 (Free, range 0-4)
+- Depth: 63 (bipolar)
 
-### Delay
-- Stereo Width: 64 (center)
-- Reverb Pre-Delay: 16
-- Reverb Decay: 32
-- Reverb Shelf Freq: 64 (center)
-- Reverb Shelf Gain: 50
-- Reverb HPF: 32
-- Pattern Volume: 100
+### Delay (channel 9)
+- Time: 23
+- Feedback: 50
+- Stereo Width: 63 (bipolar)
+- Ping Pong: 0 (Off, range 0-1)
 
-### Reverb
+### Reverb (channel 9)
 - Pre-Delay: 16
 - Decay: 32
-- Shelf Freq: 64 (center)
+- Shelf Freq: 64
 - Shelf Gain: 50
 - HPF: 32
-- Pattern Volume: 100
 
-### Chorus
-- Width: 127 (full)
-- Pattern Volume: 100
-- Volume: 100
-- Pan: 64 (center)
-- Tune: 64 (center)
+### Chorus (channel 9)
+- Depth: 127
+- Speed: 32
+- Width: 127
+
+### Compressor (channel 9)
+- Threshold: 32
+- Attack: 24
+- Release: 32
+- Makeup Gain: 63
+- Pattern Volume: 127
+
+### Track
+- Level: 100
+- Velocity: 100
+- Note: 60 (C4)
+- Length: 14 (1/16)
+- Portamento Time: 40

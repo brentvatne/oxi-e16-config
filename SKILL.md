@@ -7,6 +7,35 @@ description: OXI E16 MIDI controller scene configuration. Use when creating, edi
 
 Create and edit `.oxie16` scene files for the OXI E16 MIDI controller.
 
+## E16 Overview
+
+The OXI E16 is a compact MIDI parameter controller with:
+- **16 push/turn endless encoders** with RGB LED rings
+- **16 scenes** (7 directly accessible from home screen)
+- **12 pages per scene**, each with 16 control parameters
+- **16 presets per scene** for storing/recalling knob values
+- **192 parameters per scene** (12 pages × 16 controls)
+- **Connectivity**: USB-C, TRS MIDI (Type A, 2 out / 1 in), Bluetooth LE
+
+Each encoder can control:
+- 2 destination parameters (turn)
+- 1 push action
+
+### Encoder Behavior
+
+**Acceleration Modes (Acc0-Acc4):** Turning the encoder faster increases the step size. Higher acceleration levels make fast turns produce larger jumps. Acc0 (mode 3) is the default—smooth and predictable.
+
+**Division Modes (Div2, Div4, Div8):** Reduce resolution by dividing steps. Useful for coarse control over parameters where fine precision isn't needed.
+
+**Large Step Modes (LSp2, LSp4, LSp6):** Jump by 2x, 4x, or 6x per click. Use for banded parameters with large "dead zones" where many CC values map to the same output.
+
+### Special Turn Action Types
+
+| Type | Description |
+|------|-------------|
+| **Bipolar** | Set `bipolar: true` on encoder. Displays as -63 to +64 instead of 0-127. Use for pan, tune, and other center-zero parameters. |
+| **Snapshot** | Type 10. Encoder morphs between lower and upper values. Useful for A/B sweeps (e.g., filter closed↔open). |
+
 ## File Format
 
 Scene files are JSON with this structure.
@@ -299,6 +328,38 @@ See reference icons in `references/icons/Sprites/`:
 | 9 | NRPN |
 | 10 | SNAPSHOT |
 
+#### CC14 (14-bit CC)
+
+Type 4 sends **14-bit high-resolution CC** using paired CC numbers:
+
+- **MSB (coarse):** CC 0-31
+- **LSB (fine):** CC 32-63 (automatically MSB + 32)
+
+Set `nr1` to the MSB CC number. The E16 automatically sends both MSB and LSB for 16,384 steps of resolution.
+
+Use CC14 for:
+- Filter frequency sweeps
+- Fine pitch control
+- Any parameter where 128 steps feels "steppy"
+
+**Note:** The receiving device must support 14-bit CC. Check the device's MIDI implementation.
+
+#### CC Relative Modes (Rel1/Rel2)
+
+Types 1 and 2 send **relative CC** messages for endless encoder behavior:
+
+| Type | Mode | Increment | Decrement |
+|------|------|-----------|-----------|
+| 1 | Rel 1 | 65-127 | 1-63 |
+| 2 | Rel 2 | 1-63 | 65-127 |
+
+Use relative CC when:
+- The receiving software tracks its own parameter state
+- You want "pickup-free" control (no jumps when touching a knob)
+- The device expects relative input (some DAWs, software synths)
+
+**Note:** Most hardware synths expect absolute CC. Use CC Abs (type 3) for Elektron devices.
+
 #### NRPN Fields
 
 - `nr1`: **LSB** (CC#98 value)
@@ -321,8 +382,26 @@ Example: NRPN MSB 1, LSB 73 → `nr1: 73, nr2: 1`
 | `upper` | 127 | Maximum value (7-bit) |
 | `upper` | 16383 | Maximum value (14-bit) |
 | `display` | 10 | Standard display |
-| `mode` | 3-7 | Acc0-Acc4 (acceleration modes) |
+| `mode` | 0-10 | See Mode Values below |
 | `output` | 12 | Page (inherit from page) |
+
+#### Mode Values
+
+| Mode | Name | Description |
+|------|------|-------------|
+| 0 | Div8 | Divide resolution by 8 (coarse steps) |
+| 1 | Div4 | Divide resolution by 4 |
+| 2 | Div2 | Divide resolution by 2 |
+| 3 | Acc0 | Acceleration level 0 (default, smooth) |
+| 4 | Acc1 | Acceleration level 1 |
+| 5 | Acc2 | Acceleration level 2 |
+| 6 | Acc3 | Acceleration level 3 |
+| 7 | Acc4 | Acceleration level 4 (fastest) |
+| 8 | LSp2 | Large step mode (2x) |
+| 9 | LSp4 | Large step mode (4x) |
+| 10 | LSp6 | Large step mode (6x) |
+
+**Mode 3 (Acc0)** is the default for most parameters. Use **LSp modes** for parameters with large "dead zones" (see Banded Parameters below).
 | `instrument` | 127 | Generic/custom |
 
 #### Output Values
@@ -342,16 +421,22 @@ Example: NRPN MSB 1, LSB 73 → `nr1: 73, nr2: 1`
 
 #### Display Values
 
-| Display | Value |
-|---------|-------|
-| OFF | 0 |
-| 127 | 1 |
-| 100 | 2 (likely) |
-| 1000 | 3 |
-| B63 | 4 |
-| 9999 | 8 |
-| Standard | 10 |
-| High Res | 11 |
+| Display | Value | Description |
+|---------|-------|-------------|
+| OFF | 0 | No value displayed |
+| 127 | 1 | Show 0-127 range |
+| 100 | 2 | Show 0-100 range (percentage) |
+| 1000 | 3 | Show 0-1000 range |
+| B63 | 4 | Bipolar -63 to +64 |
+| B50 | 5 | Bipolar -50 to +50 |
+| B500 | 6 | Bipolar -500 to +500 |
+| On/Off | 7 | Toggle display |
+| 9999 | 8 | Show 0-9999 range |
+| Standard | 10 | Default display |
+| High Res | 11 | 14-bit display (0-16383) |
+
+**B63** is ideal for bipolar CC parameters (like pan, tune) where 64 = center.
+**B500** is useful for 14-bit bipolar parameters.
 
 ### Push Action (Encoder Press)
 
@@ -414,8 +499,8 @@ Encoders use object format:
 
 ```json
 {"abbr": "FREQ", "name": "Flt Freq", "cc": 16}
-{"abbr": "PAN", "name": "Pan", "cc": 89, "default": 64}
-{"abbr": "TUNE", "name": "Tune", "cc": 40, "default": 64}
+{"abbr": "PAN", "name": "Pan", "cc": 89, "default": 64, "bipolar": true}
+{"abbr": "TUNE", "name": "Tune", "cc": 40, "default": 64, "bipolar": true}
 {"abbr": "DELT", "name": "Del Time", "cc": 21, "channel": 9}
 {"abbr": "MUL1", "name": "LF1 Mult", "cc": 103, "upper": 23}
 {"abbr": "ALGO", "name": "Algorith", "cc": 40, "upper": 7}
@@ -430,6 +515,8 @@ Encoders use object format:
 - `channel` - Override page channel (optional)
 - `default` - Reset value when pressed (optional, default 0)
 - `lower`, `upper` - Value range (optional, default 0-127)
+- `mode` - Encoder mode 0-10 (optional, default 3/Acc0). Use 10 (LSp6) for banded parameters
+- `bipolar` - Set `true` for center-zero display (-63 to +64). Use for Pan, Tune, etc.
 
 ### Default Values
 
@@ -508,6 +595,29 @@ For parameters with discrete values (not continuous 0-127), set the `upper` fiel
 **Finding discrete ranges:** First check the instrument's .mdx file for documented discrete values. Then check the .oxiindef file's `maximum` field for each parameter. If not available, refer to the device's MIDI implementation chart or count the options in the device's menu.
 
 **Why this matters:** Without proper `upper` limits, turning the encoder past the last valid value has no effect - the parameter stays at its maximum. Setting `upper` correctly makes the encoder feel responsive across its full range
+
+### Banded Parameter Limitation
+
+Some synth parameters interpret CC values in non-linear **bands** rather than continuously. The E16 can only send linear CC values, so these parameters feel unresponsive through most of the encoder's range.
+
+**Example: Digitone II Main Octave (CC 44)**
+
+| CC Range | Octave Value |
+|----------|--------------|
+| 127 | 0 |
+| 65-126 | -1 |
+| 0-64 | -2 |
+
+The encoder turns through 62 values (127→65) with no visible change, then suddenly jumps to -1 octave. This is a **synth limitation**, not an E16 issue—the E16 has no way to map specific CC values to encoder positions.
+
+**Workaround:** Use **LSp6 mode** (mode 10) to step through banded ranges faster. This doesn't fix the fundamental limitation but makes navigation less tedious.
+
+```json
+{"abbr": "MOCT", "name": "Main Oct", "cc": 44, "default": 127, "mode": 10}
+```
+
+**Affected parameters (Digitone II):**
+- Main Octave (CC 44) — 3 bands for -2, -1, 0 octaves
 
 **Scene fields:**
 - `instrument` - Path to `.oxiindef` file for parameter reference (used for verifying CCs, finding discrete value ranges, and default value lookup). Also check the companion `.mdx` file with the same name for additional documentation on defaults and discrete values

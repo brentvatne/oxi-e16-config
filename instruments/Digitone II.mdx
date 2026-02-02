@@ -2,73 +2,114 @@
 
 Additional parameter information not captured in the .oxiindef file.
 
+Source: https://github.com/pencilresearch/midi/blob/main/Elektron/Digitone%20II.csv
+
 ## Discrete Values
 
-| Parameter | Range | Values |
-|-----------|-------|--------|
-| Osc1 Wave (CC 41) | 0-1 | Sine, Triangle |
-| Osc2 Wave (CC 45) | 0-1 | Sine, Triangle |
-| Osc Mod (CC 50) | 0-3 | FM, AM, Ring, Off |
-| Algorithm (CC 40, FM Tone) | 0-7 | 8 algorithms |
-| Algorithm (CC 43, FM Drum) | 0-6 | 7 algorithms |
-| Filter Type (CC 18) | 0-2 | LP, HP, BP |
-| LFO Multiplier (CC 103/112) | 0-23 | Various time divisions |
-| LFO Waveform (CC 106/115) | 0-6 | Tri, Sine, Sqr, Saw, Exp, Ramp, Random |
-| LFO Trig Mode (CC 108/117) | 0-4 | Free, Trig, Hold, One, Half |
-| Main Octave (CC 44, Swarmer) | 0-127 | 127=0, 65-126=-1, 0-64=-2 |
+| Parameter | CC | Range | Values |
+|-----------|-----|-------|--------|
+| Osc1/2 Wave (Wavetone) | 41/45 | 0-120 | 121 waveforms |
+| Osc Mod | 50 | 0-3 | FM, AM, Ring, Off |
+| Osc Phase Reset | 51 | 0-2 | 3 modes |
+| Algorithm (FM Tone) | 40 | 0-7 | 8 algorithms |
+| Algorithm (FM Drum) | 43 | 0-6 | 7 algorithms |
+| Ratio C (FM Tone) | 41 | 0-18 | 19 values (0.25-16.0) |
+| Ratio A (FM Tone) | 42 | 0-36 | 36 ratios |
+| Ratio B (FM Tone) | 43 | 0-36 | 36 ratios |
+| Main Octave (Swarmer) | 44 | 0-2 | -2, -1, 0 octaves |
+| Noise Type | 62 | 0-2 | 3 types |
+| Filter Type | 18 | 0-2 | LP, HP, BP |
+| Key Tracking | 26 | 0-100 | NOT 0-127 |
+| Amp Mode | 91 | 0-1 | AHD, ADSR |
+| SRR Routing | 80 | 0-1 | Pre, Post filter |
+| Delay Pingpong | 22 | 0-1 | Off, On |
+| LFO Multiplier | 103/112 | 0-23 | 24 time divisions |
+| LFO Waveform | 106/115 | 0-6 | Tri, Sine, Sqr, Saw, Exp, Ramp, Random |
+| LFO Trig Mode | 108/117 | 0-4 | Free, Trig, Hold, One, Half |
+| Mute | 94 | 0-1 | Unmuted, Muted |
 
 ## Default Values
 
+Note: Elektron uses 63 as center value (not 64). Volume defaults to 110 (not 100).
+
 ### Wavetone
-- Osc1/2 Tune: 64 (center)
-- Osc1/2 Phase Distortion: 64 (center)
+- Osc1/2 Tune: 63 (bipolar)
+- Osc1/2 Wave: 0 (range 0-120)
+- Osc1/2 Phase Distortion: 50 (range 0-100, NOT bipolar)
 - Osc1/2 Level: 100
-- Osc1/2 Linearity: 64 (center)
-- Osc Drift: 64 (center)
-- Noise Level: 100
+- Osc1/2 Linearity: 63 (bipolar)
+- Osc Drift: 0 (NOT bipolar)
+- Osc Phase Reset: 1
+- Noise Level: 0
 
 ### Swarmer
-- Tune: 64 (center)
+- Tune: 63 (bipolar)
 - Swarm Wave: 80 (range 0-120)
 - Swarm Detune: 70
-- Swarm Mix: 127 (full)
-- Main Octave: 127 (0 octaves)
+- Swarm Mix: 127
+- Main Octave: 0 (range 0-2, maps to -2/-1/0)
 - Main Wave: 80 (range 0-120)
 - Swarm Animation: 15
 - Noise Modulator: 20
-- Filter Envelope: 64 (center)
-- Volume: 100
+- Filter Envelope: 63 (bipolar)
+- Volume: 110
 - Track Level: 100
 
 ### FM Tone
-- Harmonic: 64 (center)
-- Detune: 64 (center)
-- Mix: 64 (center)
-- A Level: 100
-- B Level: 100
+- Algorithm: 0 (range 0-7)
+- Ratio C: 3 (range 0-18)
+- Ratio A: 3 (range 0-36)
+- Ratio B: 4 (range 0-127 for CC, maps to 0-360 via NRPN)
+- Harmonic: 0 (NOT bipolar)
+- Detune: 0 (NOT bipolar)
+- Mix: 0 (bipolar, but default is 0)
+- A Level: 0
+- B Level: 0
+- Phase Reset: 1 (range 0-4)
 
 ### FM Drum
-- Tune: 64 (center)
-- Body Level: 100
-- Transient Level: 100
-- Noise Level: 100
+- Tune: 63 (bipolar)
+- Algorithm: 0 (range 0-6)
+- Body Level: 127
+- Transient Level: 0
+- Noise Level: 0
 
-### Filter+Amp
-- Filter Envelope: 64 (center)
-- Pan: 64 (center)
-- Volume: 100
+### Filter
+- Frequency: 127
+- Resonance: 0
+- Type: 0 (LP, range 0-2)
+- Envelope Depth: 63 (bipolar)
+- Key Tracking: 0 (range 0-100)
+
+### Amp
+- Attack: 8
+- Hold: 127
+- Decay: 32
+- Release: 0
+- Mode: 1 (ADSR, range 0-1)
+- Pan: 63 (bipolar)
+- Volume: 110
 - Track Level: 100
 
-### FX+Sends
+### FX+Sends (channel 9)
+- Delay Time: 23
+- Delay Feedback: 32
+- Delay Pingpong: 0 (range 0-1)
 - Reverb Pre-Delay: 16
 - Reverb Decay: 32
+- Chorus Depth: 127
+- Chorus Speed: 32
 - Pattern Volume: 100
 
 ### LFO
-- LFO Fade: 64 (center)
-- LFO Depth: 64 (center)
+- Speed: 112 (bipolar)
+- Multiplier: 1 (range 0-23)
+- Fade: 63 (bipolar)
+- Waveform: 1 (Sine, range 0-6)
+- Trig Mode: 0 (Free, range 0-4)
+- Depth: 63 (bipolar)
 
-### Compressor
+### Compressor (channel 9)
 - Ext L/R Level: 100
-- Ext L/R Pan: 64 (center)
+- Ext L/R Pan: 63 (bipolar)
 - Pattern Volume: 100
